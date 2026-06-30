@@ -3,9 +3,13 @@ from discord.ext import commands
 import logging
 from dotenv import load_dotenv
 import os
+import google.generativeai as genai
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
+
+genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
+model = genai.GenerativeModel('gemini-2.5-flash')
 
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
 intents = discord.Intents.default()
@@ -34,6 +38,22 @@ async def on_message(message):
         await message.channel.send(f"{message.author.mention} - dont use that word!")
 
     await bot.process_commands(message)
+
+@bot.command()
+async def gpt(ctx, *, prompt):
+    async with ctx.typing():
+        try:
+            response = model.generate_content(prompt)
+            reply = response.text
+
+            # Discord messages max out at 2000 characters
+            if len(reply) > 2000:
+                for chunk in [reply[i:i+2000] for i in range(0, len(reply), 2000)]:
+                    await ctx.send(chunk)
+            else:
+                await ctx.send(reply)
+        except Exception as e:
+            await ctx.send(f"Something went wrong: {e}")
 
 
 @bot.command()
@@ -86,8 +106,6 @@ async def poll(ctx, *, question):
     poll_message = await ctx.send(embed=embed)
     await poll_message.add_reaction("👍")
     await poll_message.add_reaction("👎")
-
-
 
 
 
