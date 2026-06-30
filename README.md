@@ -1,16 +1,17 @@
 # Discord Bot Reptile 
 
-A Discord bot built with Python and Discord.py featuring moderation, role management, polls, and AI chatbot integration.
+An AI Discord bot built with Python and Discord.py featuring moderation, role management, polls, and AI chatbot integration.
 
 ## Features
 
 - Welcome new members
+- AI chatbot support
 - Auto-delete banned words
 - Assign and remove Gamer role
 - Role-protected secret commands
 - Direct messaging
 - Poll creation
-- AI chatbot support
+
 
 ## Commands
 
